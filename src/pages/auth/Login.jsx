@@ -1,37 +1,33 @@
-// Signup.js
+/* eslint-disable react/no-unescaped-entities */
+// Login.js
 import { useState } from "react";
 import * as Yup from "yup";
 import SharedInput from "./SharedInput";
-import { SignUpApi } from "@/utils/auth/authApi";
+import { loginApi } from "@/utils/auth/authApi";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const SignupSchema = Yup.object().shape({
-  username: Yup.string().required("Name is required."),
+const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid.").required("Email is required."),
   password: Yup.string().required("Password is required."),
 });
 
-const Signup = () => {
+const Login = () => {
   const { setIsLoggedIn } = useAuth();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await SignupSchema.validate(
-        { username, email, password },
-        { abortEarly: false }
-      );
-      const data = await SignUpApi({ username, email, password });
+      await LoginSchema.validate({ email, password }, { abortEarly: false });
+      const data = await loginApi({ email, password });
       if (data) {
         setIsLoggedIn(true);
-        toast.success("Signup successful!");
+        toast.success("Login successful!");
         navigate("/");
       }
     } catch (err) {
@@ -42,34 +38,23 @@ const Signup = () => {
         });
         setErrors(newErrors);
       } else {
-        console.error("Error signing up:", err);
-        toast.error("Error signing up. Please try again.");
+        console.error("Error logging in:", err);
+        toast.error("Error logging in. Please try again.");
       }
     }
   };
 
-  const handleLoginRedirect = () => {
-    navigate("/login");
+  const handleSignUpRedirect = () => {
+    navigate("/register");
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#7A1CAC]">
       <div className="p-8 rounded-lg shadow-lg bg-[#2E073F] w-full max-w-md transform transition duration-500 hover:scale-105">
         <h2 className="text-3xl font-bold mb-6 text-center text-[#EBD3F8]">
-          Sign Up
+          Log In
         </h2>
-        <form onSubmit={handleSignup}>
-          <SharedInput
-            label="Username"
-            type="text"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              setErrors((prev) => ({ ...prev, username: undefined }));
-            }}
-            placeholder="Enter your username"
-            error={errors.username}
-          />
+        <form onSubmit={handleLogin}>
           <SharedInput
             label="Email"
             type="email"
@@ -96,16 +81,16 @@ const Signup = () => {
             type="submit"
             className="w-full py-3 mt-4 bg-[#AD49E1] text-[#2E073F] font-bold rounded-lg hover:bg-[#EBD3F8] transition duration-300"
           >
-            Sign Up
+            Log In
           </button>
         </form>
         <div className="mt-4 text-center">
-          <span className="text-[#EBD3F8]">Already have an account?</span>
+          <span className="text-[#EBD3F8]">Don't have an account?</span>
           <button
-            onClick={handleLoginRedirect}
+            onClick={handleSignUpRedirect}
             className="mt-2 w-full py-2 bg-[#EBD3F8] text-[#2E073F] font-bold rounded-lg hover:bg-[#AD49E1] transition duration-300"
           >
-            Log In
+            Sign Up
           </button>
         </div>
       </div>
@@ -113,4 +98,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

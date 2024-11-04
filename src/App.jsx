@@ -1,10 +1,20 @@
+/* eslint-disable react/no-children-prop */
+import { Route, Routes } from "react-router-dom";
+import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ProtectedRoute } from "./utils/auth/ProtectedRoute";
+import Home from "./pages/dashboard/Home";
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <SignUp />
+      <Routes>
+        <Route path="/register" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ProtectedRoute children={<Home />} />} />
+      </Routes>
+      <ToastContainer />
     </>
   );
 }
