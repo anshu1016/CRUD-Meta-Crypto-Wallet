@@ -2,11 +2,11 @@
 // Login.js
 import { useState } from "react";
 import * as Yup from "yup";
-import SharedInput from "./SharedInput";
 import { loginApi } from "@/utils/auth/authApi";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import SharedInput from "../shared/SharedInput";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid.").required("Email is required."),
@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#7A1CAC]">
+    <div className="flex items-center justify-center min-h-screen bg-[#7A1CAC] px-4">
       <div className="p-8 rounded-lg shadow-lg bg-[#2E073F] w-full max-w-md transform transition duration-500 hover:scale-105">
         <h2 className="text-3xl font-bold mb-6 text-center text-[#EBD3F8]">
           Log In
