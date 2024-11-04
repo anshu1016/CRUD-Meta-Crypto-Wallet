@@ -51,8 +51,7 @@ const Dashboard = () => {
     setIsModalOpen(true);
   };
 
-  const handleAddTitle = async (e) => {
-    e.preventDefault();
+  const handleAddTitle = async (title) => {
     if (!walletAddress) {
       toast.error("Please connect your MetaMask wallet to add titles.");
       return;
@@ -60,12 +59,12 @@ const Dashboard = () => {
 
     setLoading(true);
     try {
-      const createdTitle = await createTitle(token, newTitle);
+      const createdTitle = await createTitle(token, title);
       const updatedTitles = [...titles, createdTitle];
       setTitles(updatedTitles);
       localStorage.setItem("titles", JSON.stringify(updatedTitles));
       toast.success("Title added successfully!");
-      setNewTitle("");
+      setNewTitle(""); // Clear the newTitle state
       setIsModalOpen(false);
     } catch (err) {
       console.error("Error adding title:", err);
@@ -88,7 +87,6 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
-    // Clear token and redirect to login (you can customize this as needed)
     localStorage.removeItem("token");
     toast.success("Logged out successfully!");
     window.location.href = "/login"; // Redirect to login page
@@ -99,47 +97,37 @@ const Dashboard = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-[#EBD3F8]">CheckTitles</h1>
         <div className="flex items-center space-x-4">
-          {/* Full Add Title Button */}
           <button
             onClick={handleAddTitleClick}
             className="hidden md:flex items-center bg-[#AD49E1] text-[#2E073F] py-2 px-4 rounded-lg hover:bg-[#EBD3F8] transition duration-300"
           >
-            <AiOutlinePlus className="mr-2 text-lg" /> {/* Add Title Icon */}
+            <AiOutlinePlus className="mr-2 text-lg" />
             Add Title
           </button>
-
-          {/* Icon for Add Title Button on smaller screens */}
           <button
             onClick={handleAddTitleClick}
             className="flex md:hidden items-center bg-[#AD49E1] text-[#2E073F] p-2 rounded-full hover:bg-[#EBD3F8] transition duration-300"
           >
-            <AiOutlinePlus className="text-lg" /> {/* Add Title Icon */}
+            <AiOutlinePlus className="text-lg" />
           </button>
-
-          {/* Full Logout Button */}
           <button
             onClick={handleLogout}
             className="hidden md:flex items-center bg-[#AD49E1] text-[#2E073F] py-2 px-4 rounded-lg hover:bg-[#EBD3F8] transition duration-300"
           >
-            <FiLogOut className="mr-2 text-lg" /> {/* Logout Icon */}
+            <FiLogOut className="mr-2 text-lg" />
             Logout
           </button>
-
-          {/* Icon for Logout Button on smaller screens */}
           <button
             onClick={handleLogout}
             className="flex md:hidden items-center bg-[#AD49E1] text-[#2E073F] p-2 rounded-full hover:bg-[#EBD3F8] transition duration-300"
           >
-            <FiLogOut className="text-lg" /> {/* Logout Icon */}
+            <FiLogOut className="text-lg" />
           </button>
         </div>
       </div>
-
-      {/* Centered Connect Wallet Button */}
       <div className="flex justify-center mt-4">
         <MetaMaskIntegration onWalletConnected={handleWalletConnected} />
       </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {loading ? (
           <div>Loading...</div>
@@ -165,7 +153,7 @@ const Dashboard = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddTitle}
+        onSubmit={handleAddTitle} // Pass the handleAddTitle directly
       >
         <SharedInput
           label="Title"

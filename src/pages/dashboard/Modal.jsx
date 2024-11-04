@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import ReactDOM from "react-dom";
 import * as Yup from "yup";
 
@@ -7,17 +8,18 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     try {
-      // Validate title using Yup
       const schema = Yup.object().shape({
         title: Yup.string().required("Title is required."),
       });
 
       await schema.validate({ title }, { abortEarly: false });
       setErrors({});
-      onSubmit(title); // Call the onSubmit function with the title
-      onClose(); // Optionally close the modal after submission
+      onSubmit(title);
+      setTitle("");
+      setErrors({});
+      onClose();
     } catch (err) {
       if (err.name === "ValidationError") {
         const newErrors = {};
